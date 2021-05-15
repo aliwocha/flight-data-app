@@ -14,6 +14,9 @@ class FlightLoad {
         this.pieces = pieces;
     }
 
+    public FlightLoad() {
+    }
+
     public int getId() {
         return id;
     }

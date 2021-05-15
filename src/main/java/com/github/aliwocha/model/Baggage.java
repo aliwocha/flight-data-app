@@ -1,8 +1,11 @@
 package com.github.aliwocha.model;
 
-class Baggage extends FlightLoad {
+public class Baggage extends FlightLoad {
 
-    Baggage(int id, int weight, String weightUnit, int pieces) {
+    public Baggage(int id, int weight, String weightUnit, int pieces) {
         super(id, weight, weightUnit, pieces);
+    }
+
+    public Baggage() {
     }
 }

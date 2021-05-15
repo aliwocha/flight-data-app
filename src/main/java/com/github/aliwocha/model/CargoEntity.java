@@ -1,17 +1,18 @@
 package com.github.aliwocha.model;
 
-import java.util.List;
-
 public class CargoEntity {
 
     private int flightId;
-    private List<Baggage> baggageList;
-    private List<Cargo> cargoList;
+    private Baggage[] baggage;
+    private Cargo[] cargo;
 
-    public CargoEntity(int flightId, List<Baggage> baggageList, List<Cargo> cargoList) {
+    public CargoEntity(int flightId, Baggage[] baggage, Cargo[] cargo) {
         this.flightId = flightId;
-        this.baggageList = baggageList;
-        this.cargoList = cargoList;
+        this.baggage = baggage;
+        this.cargo = cargo;
+    }
+
+    public CargoEntity() {
     }
 
     public int getFlightId() {
@@ -22,19 +23,19 @@ public class CargoEntity {
         this.flightId = flightId;
     }
 
-    public List<Baggage> getBaggageList() {
-        return baggageList;
+    public Baggage[] getBaggage() {
+        return baggage;
     }
 
-    public void setBaggageList(List<Baggage> baggageList) {
-        this.baggageList = baggageList;
+    public void setBaggage(Baggage[] baggage) {
+        this.baggage = baggage;
     }
 
-    public List<Cargo> getCargoList() {
-        return cargoList;
+    public Cargo[] getCargo() {
+        return cargo;
     }
 
-    public void setCargoList(List<Cargo> cargoList) {
-        this.cargoList = cargoList;
+    public void setCargo(Cargo[] cargo) {
+        this.cargo = cargo;
     }
 }

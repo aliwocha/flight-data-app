@@ -18,6 +18,9 @@ public class FlightEntity {
         this.departureDate = departureDate;
     }
 
+    public FlightEntity() {
+    }
+
     public int getFlightId() {
         return flightId;
     }
