@@ -2,7 +2,7 @@ package com.github.aliwocha.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.aliwocha.model.CargoEntity;
+import com.github.aliwocha.model.FlightLoadEntity;
 import com.github.aliwocha.model.FlightEntity;
 
 import java.io.IOException;
@@ -13,15 +13,12 @@ import java.util.List;
 
 public class JsonMapper {
 
-    static final String FLIGHT_ENTITY_JSON_FILE_PATH = "/json/flightEntity.json";
-    static final String CARGO_ENTITY_JSON_FILE_PATH = "/json/cargoEntity.json";
-
-    public static List<FlightEntity> mapJsonToFlightEntity() {
+    public static List<FlightEntity> mapJsonToFlightEntity(String filePath) {
         List<FlightEntity> flightEntityList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<List<FlightEntity>> typeReference = new TypeReference<>() {};
-        InputStream inputStream = TypeReference.class.getResourceAsStream(FLIGHT_ENTITY_JSON_FILE_PATH);
+        InputStream inputStream = TypeReference.class.getResourceAsStream(filePath);
 
         try {
             flightEntityList = mapper.readValue(inputStream, typeReference);
@@ -33,12 +30,12 @@ public class JsonMapper {
         return flightEntityList;
     }
 
-    public static List<CargoEntity> mapJsonToCargoEntity() {
-        List<CargoEntity> cargoEntityList = new ArrayList<>();
+    public static List<FlightLoadEntity> mapJsonToCargoEntity(String filePath) {
+        List<FlightLoadEntity> cargoEntityList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<CargoEntity>> typeReference = new TypeReference<>() {};
-        InputStream inputStream = TypeReference.class.getResourceAsStream(CARGO_ENTITY_JSON_FILE_PATH);
+        TypeReference<List<FlightLoadEntity>> typeReference = new TypeReference<>() {};
+        InputStream inputStream = TypeReference.class.getResourceAsStream(filePath);
 
         try {
             cargoEntityList = mapper.readValue(inputStream, typeReference);

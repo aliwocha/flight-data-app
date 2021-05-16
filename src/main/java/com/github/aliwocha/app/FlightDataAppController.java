@@ -6,16 +6,12 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FlightDataAppController {
-    private static final String FLIGHT_ENTITY_JSON_FILE_PATH = "/json/flightEntity.json";
-    private static final String CARGO_ENTITY_JSON_FILE_PATH = "/json/cargoEntity.json";
-
     private static final int UNDEFINED = 0;
     private static final int OPTION1 = 1;
     private static final int OPTION2 = 2;
     private static final int EXIT = 3;
 
     private final Scanner scanner = new Scanner(System.in);
-
     private final FlightDataAppService service = new FlightDataAppService();
 
     void controlLoop() {
@@ -27,7 +23,7 @@ public class FlightDataAppController {
 
             switch (option) {
                 case OPTION1:
-                    service.executeOption1();
+                    service.printBaggageAndCargoWeightForRequestedFlight();
                     break;
                 case OPTION2:
                     service.executeOption2();
@@ -36,16 +32,15 @@ public class FlightDataAppController {
                     close();
                     break;
                 default:
-                    System.out.println("Chosen option is not correct. Please try again.");
-
+                    System.err.println("Chosen option is not correct. Please try again.");
             }
         }
     }
 
     private void printOptions() {
         System.out.println("Choose option:");
-        System.out.println("1 - Calculate baggage and cargo weight for requested Flight Number and date");
-        System.out.println("2 - Calculate number of flights and baggage for requested IATA Airport Code");
+        System.out.println("1 - Calculate baggage and cargo weight for requested Flight Number and Departure Date");
+        System.out.println("2 - Calculate number of flights and baggage for requested IATA Airport Code and Departure Date");
         System.out.println("3 - Exit the program");
     }
 

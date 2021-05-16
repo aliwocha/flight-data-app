@@ -1,19 +1,10 @@
 package com.github.aliwocha.model;
 
-public class CargoEntity {
+public class FlightLoadEntity {
 
     private int flightId;
     private Baggage[] baggage;
     private Cargo[] cargo;
-
-    public CargoEntity(int flightId, Baggage[] baggage, Cargo[] cargo) {
-        this.flightId = flightId;
-        this.baggage = baggage;
-        this.cargo = cargo;
-    }
-
-    public CargoEntity() {
-    }
 
     public int getFlightId() {
         return flightId;

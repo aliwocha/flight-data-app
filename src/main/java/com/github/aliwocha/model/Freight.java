@@ -1,21 +1,11 @@
 package com.github.aliwocha.model;
 
-class FlightLoad {
+public class Freight {
 
     private int id;
-    private int weight;
+    private double weight;
     private String weightUnit;
     private int pieces;
-
-    FlightLoad(int id, int weight, String weightUnit, int pieces) {
-        this.id = id;
-        this.weight = weight;
-        this.weightUnit = weightUnit;
-        this.pieces = pieces;
-    }
-
-    public FlightLoad() {
-    }
 
     public int getId() {
         return id;
@@ -25,11 +15,11 @@ class FlightLoad {
         this.id = id;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
