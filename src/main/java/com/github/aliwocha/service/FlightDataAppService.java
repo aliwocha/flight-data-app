@@ -1,7 +1,6 @@
 package com.github.aliwocha.service;
 
 import com.github.aliwocha.exception.NoSuchFlightException;
-import com.github.aliwocha.exception.WrongDateFormatException;
 import com.github.aliwocha.model.*;
 import com.github.aliwocha.utils.JsonMapper;
 import com.github.aliwocha.utils.WeightUnitConverter;
@@ -11,34 +10,29 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class FlightDataAppService {
     private static final String FLIGHT_ENTITY_JSON_FILE_PATH = "/json/flightEntity.json";
     private static final String CARGO_ENTITY_JSON_FILE_PATH = "/json/flightLoadEntity.json";
 
+    private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+    private final List<FlightEntity> flights = JsonMapper.mapJsonToFlightEntity(FLIGHT_ENTITY_JSON_FILE_PATH);
+    private final List<FlightLoadEntity> flightsLoadList = JsonMapper.mapJsonToCargoEntity(CARGO_ENTITY_JSON_FILE_PATH);
+
     private final Scanner scanner = new Scanner(System.in);
 
-    public void printBaggageAndCargoWeightForRequestedFlight() {
-        System.out.println("Please provide Flight Number:");
-        int flightNumber = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Please provide departure date of the flight using date format \"YYYY-MM-ddThh:mm:ssZ\":");
-        final String datePattern = "yyyy-MM-dd'T'HH:mm:ssZ";
-
-        SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
-        Date departureDate;
-
-        try {
-            departureDate = formatter.parse(scanner.nextLine());
-        } catch (ParseException e) {
-            throw new WrongDateFormatException("Wrong date format!");
-        }
+    public void printResultsForRequestedFlight() {
+        int flightNumber = getFlightNumberFromUser();
+        Date departureDate = getDepartureDateFromUser();
 
         Weight cargoWeight = getCargoWeight(flightNumber, departureDate);
         Weight baggageWeight = getBaggageWeight(flightNumber, departureDate);
+
         double weightSumInPounds = cargoWeight.getPounds() + baggageWeight.getPounds();
         double weightSumInKilograms = cargoWeight.getKilograms() + baggageWeight.getKilograms();
 
@@ -53,23 +47,72 @@ public class FlightDataAppService {
                 + "kg / " + df.format(weightSumInPounds) + "lb");
     }
 
-    public void executeOption2() {
-        System.out.println("Option 2");
+    public void printResultsForRequestedAirport() {
+        System.out.println("Please provide IATA Airport Code:");
+        String airportIATACode = scanner.nextLine();
+
+        long numberOfFlightsDeparting = getNumberOfFlightsDeparting(airportIATACode);
+        long numberOfFlightsArriving = getNumberOfFlightsArriving(airportIATACode);
+
+        int numberOfBaggageDeparting = getNumberOfBaggageDeparting(airportIATACode);
+        int numberOfBaggageArriving = getNumberOfBaggageArriving(airportIATACode);
+
+        System.out.println("Total number of flights departing from the airport \"" + airportIATACode + "\" - "
+                + numberOfFlightsDeparting);
+        System.out.println("Total number of flights arriving to the airport \"" + airportIATACode + "\" - "
+                + numberOfFlightsArriving);
+
+        System.out.println("Total number of baggage departing from the airport \"" + airportIATACode + "\" - "
+                + numberOfBaggageDeparting);
+        System.out.println("Total number of baggage arriving from the airport \"" + airportIATACode + "\" - "
+                + numberOfBaggageArriving);
+    }
+
+    private int getFlightNumberFromUser() {
+        int flightNumber = 0;
+
+        boolean error = true;
+        do {
+            System.out.println("Please provide Flight Number:");
+
+            try {
+                flightNumber = scanner.nextInt();
+                error = false;
+            } catch (InputMismatchException e) {
+                System.err.println("Flight Number must be a number! Please try again.");
+            } finally {
+                scanner.nextLine();
+            }
+
+        } while (error);
+
+        return flightNumber;
+    }
+
+    private Date getDepartureDateFromUser() {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+
+        Date departureDate = new Date();
+        boolean error = true;
+        do {
+            System.out.println("Please provide departure date of the flight using date format \"YYYY-MM-ddThh:mm:ss\""
+                    + " with time offset (e.g. 2015-07-06T06:28:23-0200):");
+
+            try {
+                departureDate = formatter.parse(scanner.nextLine());
+                error = false;
+            } catch (ParseException e) {
+                System.err.println("Wrong date format! Please try again.");
+            }
+
+        } while (error);
+
+        return departureDate;
     }
 
     private Weight getCargoWeight(int flightNumber, Date departureDate) {
-        List<FlightEntity> flights = JsonMapper.mapJsonToFlightEntity(FLIGHT_ENTITY_JSON_FILE_PATH);
-        List<FlightLoadEntity> flightsLoadList = JsonMapper.mapJsonToCargoEntity(CARGO_ENTITY_JSON_FILE_PATH);
-
-        FlightEntity flight = flights.stream()
-                .filter(f -> f.getFlightNumber() == flightNumber && f.getDepartureDate().equals(departureDate))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number or Departure Date is incorrect."));
-
-        FlightLoadEntity flightLoad = flightsLoadList.stream()
-                .filter(fl -> fl.getFlightId() == flight.getFlightId())
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+        FlightEntity flight = getFlightByFlightNumberAndDepartureDate(flightNumber, departureDate);
+        FlightLoadEntity flightLoad = getFlightLoadByFlightId(flight.getFlightId());
 
         Cargo[] cargo = flightLoad.getCargo();
         double weightInPounds = sumWeightInPounds(cargo);
@@ -79,18 +122,8 @@ public class FlightDataAppService {
     }
 
     private Weight getBaggageWeight(int flightNumber, Date departureDate) {
-        List<FlightEntity> flights = JsonMapper.mapJsonToFlightEntity(FLIGHT_ENTITY_JSON_FILE_PATH);
-        List<FlightLoadEntity> flightsLoadList = JsonMapper.mapJsonToCargoEntity(CARGO_ENTITY_JSON_FILE_PATH);
-
-        FlightEntity flight = flights.stream()
-                .filter(f -> f.getFlightNumber() == flightNumber && f.getDepartureDate().equals(departureDate))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number or Departure Date is incorrect."));
-
-        FlightLoadEntity flightLoad = flightsLoadList.stream()
-                .filter(fl -> fl.getFlightId() == flight.getFlightId())
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+        FlightEntity flight = getFlightByFlightNumberAndDepartureDate(flightNumber, departureDate);
+        FlightLoadEntity flightLoad = getFlightLoadByFlightId(flight.getFlightId());
 
         Baggage[] baggage = flightLoad.getBaggage();
         double weightInPounds = sumWeightInPounds(baggage);
@@ -99,7 +132,21 @@ public class FlightDataAppService {
         return new Weight(weightInPounds, weightInKilograms);
     }
 
-    private <T>Double sumWeightInPounds(Freight[] freight) {
+    private FlightEntity getFlightByFlightNumberAndDepartureDate(int flightNumber, Date departureDate) {
+        return flights.stream()
+                .filter(f -> f.getFlightNumber() == flightNumber && f.getDepartureDate().equals(departureDate))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number or Departure Date is incorrect."));
+    }
+
+    private FlightLoadEntity getFlightLoadByFlightId(int flightId) {
+        return flightsLoadList.stream()
+                .filter(fl -> fl.getFlightId() == flightId)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+    }
+
+    private double sumWeightInPounds(Freight[] freight) {
         double weightInPounds = 0;
 
         for (Freight f : freight) {
@@ -113,7 +160,7 @@ public class FlightDataAppService {
         return weightInPounds;
     }
 
-    private <T>Double sumWeightInKilograms(Freight[] freight) {
+    private double sumWeightInKilograms(Freight[] freight) {
         double weightInKilograms = 0;
 
         for (Freight f : freight) {
@@ -125,5 +172,51 @@ public class FlightDataAppService {
         }
 
         return weightInKilograms;
+    }
+
+    private long getNumberOfFlightsDeparting(String airportIATACode) {
+        return flights.stream()
+                .filter(f -> f.getDepartureAirportIATACode().equals(airportIATACode))
+                .count();
+    }
+
+    private long getNumberOfFlightsArriving(String airportIATACode) {
+        return flights.stream()
+                .filter(f -> f.getArrivalAirportIATACode().equals(airportIATACode))
+                .count();
+    }
+
+    private int getNumberOfBaggageDeparting(String airportIATACode) {
+        List<FlightEntity> filteredFlights = flights.stream()
+                .filter(f -> f.getDepartureAirportIATACode().equals(airportIATACode))
+                .collect(Collectors.toList());
+
+        return countBaggage(filteredFlights);
+    }
+
+    private int getNumberOfBaggageArriving(String airportIATACode) {
+        List<FlightEntity> filteredFlights = flights.stream()
+                .filter(f -> f.getArrivalAirportIATACode().equals(airportIATACode))
+                .collect(Collectors.toList());
+
+        return countBaggage(filteredFlights);
+    }
+
+    private int countBaggage(List<FlightEntity> filteredFlights) {
+        int numberOfBaggage = 0;
+
+        for (FlightEntity flight : filteredFlights) {
+            FlightLoadEntity flightLoad = flightsLoadList.stream()
+                    .filter(fl -> fl.getFlightId() == flight.getFlightId())
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+
+            Baggage[] baggage = flightLoad.getBaggage();
+            for (Baggage b : baggage) {
+                numberOfBaggage += b.getPieces();
+            }
+        }
+
+        return numberOfBaggage;
     }
 }

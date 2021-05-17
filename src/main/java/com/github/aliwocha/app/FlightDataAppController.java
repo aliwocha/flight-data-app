@@ -5,7 +5,7 @@ import com.github.aliwocha.service.FlightDataAppService;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class FlightDataAppController {
+class FlightDataAppController {
     private static final int UNDEFINED = 0;
     private static final int OPTION1 = 1;
     private static final int OPTION2 = 2;
@@ -23,10 +23,10 @@ public class FlightDataAppController {
 
             switch (option) {
                 case OPTION1:
-                    service.printBaggageAndCargoWeightForRequestedFlight();
+                    service.printResultsForRequestedFlight();
                     break;
                 case OPTION2:
-                    service.executeOption2();
+                    service.printResultsForRequestedAirport();
                     break;
                 case EXIT:
                     close();
@@ -40,7 +40,7 @@ public class FlightDataAppController {
     private void printOptions() {
         System.out.println("Choose option:");
         System.out.println("1 - Calculate baggage and cargo weight for requested Flight Number and Departure Date");
-        System.out.println("2 - Calculate number of flights and baggage for requested IATA Airport Code and Departure Date");
+        System.out.println("2 - Calculate number of flights and baggage for requested IATA Airport Code");
         System.out.println("3 - Exit the program");
     }
 
