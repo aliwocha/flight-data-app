@@ -1,6 +1,6 @@
 package com.github.aliwocha.service;
 
-import com.github.aliwocha.exception.NoSuchFlightException;
+import com.github.aliwocha.exception.FlightNotFoundException;
 import com.github.aliwocha.model.*;
 import com.github.aliwocha.utils.JsonMapper;
 import com.github.aliwocha.utils.WeightUnitConverter;
@@ -136,14 +136,14 @@ public class FlightDataAppService {
         return flights.stream()
                 .filter(f -> f.getFlightNumber() == flightNumber && f.getDepartureDate().equals(departureDate))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number or Departure Date is incorrect."));
+                .orElseThrow(() -> new FlightNotFoundException("Provided Flight Number or Departure Date not found."));
     }
 
     private FlightLoadEntity getFlightLoadByFlightId(int flightId) {
         return flightsLoadList.stream()
                 .filter(fl -> fl.getFlightId() == flightId)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+                .orElseThrow(() -> new FlightNotFoundException("Provided Flight Number not found."));
     }
 
     private double sumWeightInPounds(Freight[] freight) {
@@ -209,7 +209,7 @@ public class FlightDataAppService {
             FlightLoadEntity flightLoad = flightsLoadList.stream()
                     .filter(fl -> fl.getFlightId() == flight.getFlightId())
                     .findFirst()
-                    .orElseThrow(() -> new NoSuchFlightException("Provided Flight Number is incorrect."));
+                    .orElseThrow(() -> new FlightNotFoundException("Provided Flight Number is incorrect."));
 
             Baggage[] baggage = flightLoad.getBaggage();
             for (Baggage b : baggage) {
