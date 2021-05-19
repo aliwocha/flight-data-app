@@ -13,7 +13,7 @@ import java.util.List;
 
 public class JsonMapper {
 
-    public static List<FlightEntity> mapJsonToFlightEntity(String filePath) {
+    public static List<FlightEntity> mapJsonToFlightEntity(final String filePath) {
         List<FlightEntity> flightEntityList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -23,14 +23,14 @@ public class JsonMapper {
         try {
             flightEntityList = mapper.readValue(inputStream, typeReference);
         } catch (IOException e) {
-            System.err.println("Unable to read file");
+            System.err.println("Unable to read file!");
             e.printStackTrace();
         }
 
         return flightEntityList;
     }
 
-    public static List<FlightLoadEntity> mapJsonToCargoEntity(String filePath) {
+    public static List<FlightLoadEntity> mapJsonToCargoEntity(final String filePath) {
         List<FlightLoadEntity> cargoEntityList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +40,7 @@ public class JsonMapper {
         try {
             cargoEntityList = mapper.readValue(inputStream, typeReference);
         } catch (IOException e) {
-            System.err.println("Unable to read file");
+            System.err.println("Unable to read file!");
             e.printStackTrace();
         }
 

@@ -1,28 +1,29 @@
 package com.github.aliwocha.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class FlightEntity {
 
-    private int flightId;
-    private int flightNumber;
+    private Integer flightId;
+    private Integer flightNumber;
     private String departureAirportIATACode;
     private String arrivalAirportIATACode;
     private Date departureDate;
 
-    public int getFlightId() {
+    public Integer getFlightId() {
         return flightId;
     }
 
-    public void setFlightId(int flightId) {
+    public void setFlightId(Integer flightId) {
         this.flightId = flightId;
     }
 
-    public int getFlightNumber() {
+    public Integer getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(Integer flightNumber) {
         this.flightNumber = flightNumber;
     }
 
@@ -48,5 +49,21 @@ public class FlightEntity {
 
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlightEntity that = (FlightEntity) o;
+        return Objects.equals(flightId, that.flightId) && Objects.equals(flightNumber, that.flightNumber)
+                && Objects.equals(departureAirportIATACode, that.departureAirportIATACode)
+                && Objects.equals(arrivalAirportIATACode, that.arrivalAirportIATACode)
+                && Objects.equals(departureDate, that.departureDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flightId, flightNumber, departureAirportIATACode, arrivalAirportIATACode, departureDate);
     }
 }

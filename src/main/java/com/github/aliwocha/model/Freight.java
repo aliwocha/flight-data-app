@@ -1,25 +1,27 @@
 package com.github.aliwocha.model;
 
-public class Freight {
+import java.util.Objects;
 
-    private int id;
-    private double weight;
+public abstract class Freight {
+
+    private Integer id;
+    private Double weight;
     private String weightUnit;
-    private int pieces;
+    private Integer pieces;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
@@ -31,11 +33,25 @@ public class Freight {
         this.weightUnit = weightUnit;
     }
 
-    public int getPieces() {
+    public Integer getPieces() {
         return pieces;
     }
 
-    public void setPieces(int pieces) {
+    public void setPieces(Integer pieces) {
         this.pieces = pieces;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Freight freight = (Freight) o;
+        return Objects.equals(id, freight.id) && Objects.equals(weight, freight.weight)
+                && Objects.equals(weightUnit, freight.weightUnit) && Objects.equals(pieces, freight.pieces);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, weight, weightUnit, pieces);
     }
 }

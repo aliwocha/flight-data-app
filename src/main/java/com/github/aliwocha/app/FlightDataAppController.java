@@ -11,28 +11,34 @@ class FlightDataAppController {
     private static final int OPTION2 = 2;
     private static final int EXIT = 3;
 
-    private final Scanner scanner = new Scanner(System.in);
-    private final FlightDataAppService service = new FlightDataAppService();
+    private final Scanner scanner;
+    private final FlightDataAppService service;
 
-    void controlLoop() {
+    FlightDataAppController() {
+        scanner = new Scanner(System.in);
+        service = new FlightDataAppService();
+    }
+
+    void controlLoop() throws InterruptedException {
         int option = UNDEFINED;
 
         while (option != EXIT) {
+            Thread.sleep(500);
             printOptions();
             option = chooseOption();
 
             switch (option) {
                 case OPTION1:
-                    service.printResultsForRequestedFlight();
+                    service.executeOption1();
                     break;
                 case OPTION2:
-                    service.printResultsForRequestedAirport();
+                    service.executeOption2();
                     break;
                 case EXIT:
                     close();
                     break;
                 default:
-                    System.err.println("Chosen option is not correct. Please try again.");
+                    System.err.println("Chosen option is not correct! Please try again.");
             }
         }
     }
