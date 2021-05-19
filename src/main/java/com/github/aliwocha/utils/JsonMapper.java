@@ -30,20 +30,20 @@ public class JsonMapper {
         return flightEntityList;
     }
 
-    public static List<FlightLoadEntity> mapJsonToCargoEntity(final String filePath) {
-        List<FlightLoadEntity> cargoEntityList = new ArrayList<>();
+    public static List<FlightLoadEntity> mapJsonToFlightLoadEntity(final String filePath) {
+        List<FlightLoadEntity> flightLoadEntityList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<List<FlightLoadEntity>> typeReference = new TypeReference<>() {};
         InputStream inputStream = TypeReference.class.getResourceAsStream(filePath);
 
         try {
-            cargoEntityList = mapper.readValue(inputStream, typeReference);
+            flightLoadEntityList = mapper.readValue(inputStream, typeReference);
         } catch (IOException e) {
             System.err.println("Unable to read file!");
             e.printStackTrace();
         }
 
-        return cargoEntityList;
+        return flightLoadEntityList;
     }
 }

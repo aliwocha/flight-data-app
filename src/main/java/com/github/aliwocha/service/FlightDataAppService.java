@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class FlightDataAppService {
     private static final String FLIGHT_ENTITY_JSON_FILE_PATH = "/json/flightEntity.json";
-    private static final String CARGO_ENTITY_JSON_FILE_PATH = "/json/flightLoadEntity.json";
+    private static final String FLIGHT_LOAD_ENTITY_JSON_FILE_PATH = "/json/flightLoadEntity.json";
 
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
 
@@ -27,7 +27,7 @@ public class FlightDataAppService {
 
     public FlightDataAppService() {
         flights = JsonMapper.mapJsonToFlightEntity(FLIGHT_ENTITY_JSON_FILE_PATH);
-        flightsLoadList = JsonMapper.mapJsonToCargoEntity(CARGO_ENTITY_JSON_FILE_PATH);
+        flightsLoadList = JsonMapper.mapJsonToFlightLoadEntity(FLIGHT_LOAD_ENTITY_JSON_FILE_PATH);
         scanner = new Scanner(System.in);
     }
 
@@ -180,7 +180,7 @@ public class FlightDataAppService {
         double weightInPounds = 0;
 
         for (Freight f : freight) {
-            if (f.getWeightUnit().equals("lb")) {
+            if (f.getWeightUnit().equals("lb") && f.getWeight() > 0) {
                 weightInPounds += f.getWeight();
             } else if (f.getWeightUnit().equals("kg")) {
                 weightInPounds += WeightUnitConverter.toPounds(f.getWeight());
@@ -194,7 +194,7 @@ public class FlightDataAppService {
         double weightInKilograms = 0;
 
         for (Freight f : freight) {
-            if (f.getWeightUnit().equals("kg")) {
+            if (f.getWeightUnit().equals("kg") && f.getWeight() > 0) {
                 weightInKilograms += f.getWeight();
             } else if (f.getWeightUnit().equals("lb")) {
                 weightInKilograms += WeightUnitConverter.toKilograms(f.getWeight());
@@ -243,7 +243,9 @@ public class FlightDataAppService {
 
             Baggage[] baggage = flightLoad.getBaggage();
             for (Baggage b : baggage) {
-                numberOfBaggage += b.getPieces();
+                if (b.getPieces() > 0) {
+                    numberOfBaggage += b.getPieces();
+                }
             }
         }
 
