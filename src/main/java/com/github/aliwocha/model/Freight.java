@@ -13,7 +13,7 @@ public abstract class Freight {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -21,7 +21,7 @@ public abstract class Freight {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(final Double weight) {
         this.weight = weight;
     }
 
@@ -29,7 +29,7 @@ public abstract class Freight {
         return weightUnit;
     }
 
-    public void setWeightUnit(String weightUnit) {
+    public void setWeightUnit(final String weightUnit) {
         this.weightUnit = weightUnit;
     }
 
@@ -37,12 +37,12 @@ public abstract class Freight {
         return pieces;
     }
 
-    public void setPieces(Integer pieces) {
+    public void setPieces(final Integer pieces) {
         this.pieces = pieces;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Freight freight = (Freight) o;

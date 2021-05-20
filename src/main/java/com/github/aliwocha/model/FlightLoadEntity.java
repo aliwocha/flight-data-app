@@ -13,7 +13,7 @@ public class FlightLoadEntity {
         return flightId;
     }
 
-    public void setFlightId(Integer flightId) {
+    public void setFlightId(final Integer flightId) {
         this.flightId = flightId;
     }
 
@@ -21,7 +21,7 @@ public class FlightLoadEntity {
         return baggage;
     }
 
-    public void setBaggage(Baggage[] baggage) {
+    public void setBaggage(final Baggage[] baggage) {
         this.baggage = baggage;
     }
 
@@ -29,12 +29,12 @@ public class FlightLoadEntity {
         return cargo;
     }
 
-    public void setCargo(Cargo[] cargo) {
+    public void setCargo(final Cargo[] cargo) {
         this.cargo = cargo;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightLoadEntity that = (FlightLoadEntity) o;

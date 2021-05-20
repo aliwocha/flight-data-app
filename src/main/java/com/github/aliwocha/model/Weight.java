@@ -7,7 +7,7 @@ public class Weight {
     private double pounds;
     private double kilograms;
 
-    public Weight(double pounds, double kilograms) {
+    public Weight(final double pounds, final double kilograms) {
         this.pounds = pounds;
         this.kilograms = kilograms;
     }
@@ -16,7 +16,7 @@ public class Weight {
         return pounds;
     }
 
-    public void setPounds(double pounds) {
+    public void setPounds(final double pounds) {
         this.pounds = pounds;
     }
 
@@ -24,12 +24,12 @@ public class Weight {
         return kilograms;
     }
 
-    public void setKilograms(double kilograms) {
+    public void setKilograms(final double kilograms) {
         this.kilograms = kilograms;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Weight weight = (Weight) o;

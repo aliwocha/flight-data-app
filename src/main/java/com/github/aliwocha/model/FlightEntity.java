@@ -15,7 +15,7 @@ public class FlightEntity {
         return flightId;
     }
 
-    public void setFlightId(Integer flightId) {
+    public void setFlightId(final Integer flightId) {
         this.flightId = flightId;
     }
 
@@ -23,7 +23,7 @@ public class FlightEntity {
         return flightNumber;
     }
 
-    public void setFlightNumber(Integer flightNumber) {
+    public void setFlightNumber(final Integer flightNumber) {
         this.flightNumber = flightNumber;
     }
 
@@ -31,7 +31,7 @@ public class FlightEntity {
         return departureAirportIATACode;
     }
 
-    public void setDepartureAirportIATACode(String departureAirportIATACode) {
+    public void setDepartureAirportIATACode(final String departureAirportIATACode) {
         this.departureAirportIATACode = departureAirportIATACode;
     }
 
@@ -39,7 +39,7 @@ public class FlightEntity {
         return arrivalAirportIATACode;
     }
 
-    public void setArrivalAirportIATACode(String arrivalAirportIATACode) {
+    public void setArrivalAirportIATACode(final String arrivalAirportIATACode) {
         this.arrivalAirportIATACode = arrivalAirportIATACode;
     }
 
@@ -47,12 +47,12 @@ public class FlightEntity {
         return departureDate;
     }
 
-    public void setDepartureDate(Date departureDate) {
+    public void setDepartureDate(final Date departureDate) {
         this.departureDate = departureDate;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightEntity that = (FlightEntity) o;
